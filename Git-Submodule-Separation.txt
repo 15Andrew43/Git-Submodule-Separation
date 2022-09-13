@@ -1,0 +1,33 @@
+Есть репозиторий https://github.com/15Andrew43/Git-Submodule-Separation, в котором создается папка List в ветке List (с структурой данных List + графическая визуализация). Потом мы смерживаем List в main. Теперь хотим перенести List в отдельный репозитороий. Сначала оставим оставим только папку List локально:
+
+git clone https://github.com/15Andrew43/Git-Submodule-Separation
+cd List
+git filter-branch --subdirectory-filter List -- --all
+mkdir list
+mv * List
+git remote rm origin
+git add .
+git commit
+
+Теперь перенесем List в новый репо List:
+git clone git@github.com:15Andrew43/List.git
+cd List
+git remote add repo-A-branch <path to git repository Git-Submodule-Separation directory>
+git pull repo-A-branch main --allow-unrelated-histories
+git remote rm repo-A-branch
+
+Все, теперь у нас есть репо git@github.com:15Andrew43/List.git с нужной папкой List!
+
+
+Теперь свяжем https://github.com/15Andrew43/Git-Submodule-Separation с git@github.com:15Andrew43/List.git:
+cd Git-Submodule-Separation // пусть находимся в main
+git submodule add git@github.com:15Andrew43/List.git
+git commit -m 'Add List module'
+git push
+
+
+Все, теперь в корне репозитория есть папка нужная List! Теперь если в удаленном репо List произошли изменения, сделаем из Git-Submodule-Separation команду:
+
+git submodule update --remote List
+
+и все изменения из List подтянутся!
